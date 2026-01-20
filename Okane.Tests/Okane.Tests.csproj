@@ -18,4 +18,8 @@
         <Using Include="Xunit"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Okane.Application\Okane.Application.csproj" />
+    </ItemGroup>
+
 </Project>
