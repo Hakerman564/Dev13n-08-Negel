@@ -12,7 +12,7 @@ public class ExpensesService(List<Expense> expenses)
         return expense;
     }
 
-    public Expense Retrive(int expenseId)
+    public Expense Retrieve(int expenseId)
     {
         var expense = expenses.First(expense1 => expense1.Id == expenseId);
         return expense;
