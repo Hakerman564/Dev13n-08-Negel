@@ -2,7 +2,7 @@ namespace Okane.Application;
 
 public class ExpensesService(List<Expense> expenses)
 {
-    private int _lastId = 1;
+    private static int _lastId = 1;
 
     public Expense Create(CreateExpenseRequest request)
     {
