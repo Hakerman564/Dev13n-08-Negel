@@ -22,4 +22,16 @@ app.MapPost("/expenses",
         return Results.Created("/expenses", response);
     });
 
+app.MapGet("/expenses/{id}", (int id) =>
+{
+    var expenses = new List<Expense>();
+    var service = new ExpensesService(expenses);
+    var response = service.Retrieve(id);
+    
+    if  (response == null)
+        return Results.NotFound();
+    
+    return Results.Created("/expenses", response);
+});
+
 app.Run();

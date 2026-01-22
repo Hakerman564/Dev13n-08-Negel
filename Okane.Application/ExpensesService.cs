@@ -13,9 +13,9 @@ public class ExpensesService(List<Expense> expenses)
         return expense;
     }
 
-    public Expense Retrieve(int expenseId)
+    public Expense? Retrieve(int expenseId)
     {
-        var expense = expenses.First(e => e.Id == expenseId);
+        var expense = expenses.FirstOrDefault(e => e.Id == expenseId);
         return expense;
     }
 }
