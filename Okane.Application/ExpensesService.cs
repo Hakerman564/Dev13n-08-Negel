@@ -24,9 +24,9 @@ public class ExpensesService(List<Expense> expenses)
 
     public IEnumerable<Expense> All() => expenses;
 
-    public Expense? Update(UpdateExpenseRequest request)
+    public Expense? Update(int id, UpdateExpenseRequest request)
     {
-        var existing = expenses.FirstOrDefault(e => e.Id == request.Id);
+        var existing = expenses.FirstOrDefault(e => e.Id == id);
         
         if (existing is null)
             return null;
@@ -34,7 +34,7 @@ public class ExpensesService(List<Expense> expenses)
         expenses.Remove(existing);
         
         var newExpense = new Expense(
-            request.Id, 
+            id, 
             request.Amount, 
             request.CategoryName);
         

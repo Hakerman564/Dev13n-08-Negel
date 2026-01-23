@@ -1,3 +1,3 @@
 namespace Okane.Application;
 
-public record UpdateExpenseRequest(int Id, int Amount, string CategoryName);
+public record UpdateExpenseRequest(int Amount, string CategoryName);

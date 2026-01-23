@@ -36,8 +36,8 @@ public class ExpensesServiceTests
         var createResponse = _service.Create(
             new(10, "Food"));
         
-        var updated = _service.Update(
-            new(createResponse.Id, 20,  "Drinks"));
+        var updated = _service.Update(createResponse.Id, 
+            new(20,  "Drinks"));
         
         var retrieved = _service.Retrieve(createResponse.Id);
         Assert.NotNull(retrieved);
@@ -96,8 +96,8 @@ public class ExpensesServiceTests
         var createResponse = _service.Create(
             new(10, "Food"));
         
-        var updated = _service.Update(
-            new(createResponse.Id, 20,  "Drinks"));
+        var updated = _service.Update(createResponse.Id, 
+            new(20,  "Drinks"));
         
         Assert.NotNull(updated);
         
@@ -108,8 +108,8 @@ public class ExpensesServiceTests
     [Fact]
     public void Update_NotFound()
     {
-        var updated = _service.Update(
-            new(999, 20,  "Drinks"));
+        var updated = _service.Update( 999, 
+            new(20,  "Drinks"));
         
         Assert.Null(updated);
     }

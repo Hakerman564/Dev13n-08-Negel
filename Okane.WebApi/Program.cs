@@ -25,13 +25,17 @@ app.MapGet("/expenses/{id}",
     {
         var response = service.Retrieve(id);
         
-        // TODO: Remove this logic
-        if  (response == null)
-            return Results.NotFound();
-        
-        return Results.Ok(response);
+        return response == null ? Results.NotFound() : Results.Ok(response);
     });
 
 app.MapGet("/expenses", (ExpensesService service) => Results.Ok(service.All()));
+
+app.MapPut("/expenses/{id}", 
+    (ExpensesService service, int id, UpdateExpenseRequest request) =>
+    {
+        var response = service.Update(id, request);
+        
+        return response == null ? Results.NotFound() : Results.Ok(response);
+    });
 
 app.Run();
