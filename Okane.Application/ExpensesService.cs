@@ -23,4 +23,14 @@ public class ExpensesService(List<Expense> expenses)
     }
 
     public IEnumerable<Expense> All() => expenses;
+
+    public Expense? Update(UpdateExpenseRequest request)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool Delete(int id)
+    {
+        throw new NotImplementedException();
+    }
 }

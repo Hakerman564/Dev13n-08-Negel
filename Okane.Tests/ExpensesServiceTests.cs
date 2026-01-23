@@ -23,7 +23,31 @@ public class ExpensesServiceTests
     }
     
     [Fact]
-    public void Create_AddsExpense()
+    public void Retrieve_NotFound()
+    {
+        var retrieved = _service.Retrieve(1);
+        
+        Assert.Null(retrieved);
+    }
+    
+    [Fact]
+    public void Retrieve_Updated()
+    {
+        var createResponse = _service.Create(
+            new(10, "Food"));
+        
+        var updated = _service.Update(
+            new(createResponse.Id, 20,  "Drinks"));
+        
+        var retrieved = _service.Retrieve(createResponse.Id);
+        Assert.NotNull(retrieved);
+        
+        Assert.Equal(20, retrieved.Amount);
+        Assert.Equal("Drinks", retrieved.CategoryName);
+    }
+    
+    [Fact]
+    public void Retrieve_OneExpense()
     {
         _expenses = new List<Expense>();
         
@@ -38,9 +62,15 @@ public class ExpensesServiceTests
     }
     
     [Fact]
-    public void Retrieve_NotFound()
+    public void Retrieve_Deleted()
     {
-        var retrieved = _service.Retrieve(1);
+        var createResponse = _service.Create(
+            new(10, "Food"));
+
+        var deleteResponse = _service.Delete(createResponse.Id);
+        Assert.True(deleteResponse);
+        
+        var retrieved = _service.Retrieve(createResponse.Id);
         
         Assert.Null(retrieved);
     }
@@ -58,5 +88,40 @@ public class ExpensesServiceTests
         var firstExpense = response.First();
         Assert.Equal(10, firstExpense.Amount);
         Assert.Equal("Food", firstExpense.CategoryName);
+    }
+
+    [Fact]
+    public void Update_Response()
+    {
+        var createResponse = _service.Create(
+            new(10, "Food"));
+        
+        var updated = _service.Update(
+            new(createResponse.Id, 20,  "Drinks"));
+        
+        Assert.NotNull(updated);
+        
+        Assert.Equal(20, updated.Amount);
+        Assert.Equal("Drinks", updated.CategoryName);
+    }
+    
+    [Fact]
+    public void Update_NotFound()
+    {
+        var updated = _service.Update(
+            new(999, 20,  "Drinks"));
+        
+        Assert.Null(updated);
+    }
+
+    [Fact]
+    public void Delete_Response()
+    {
+        var createResponse = _service.Create(
+            new(10, "Food"));
+
+        var response = _service.Delete(createResponse.Id);
+        
+        Assert.True(response);
     }
 }
