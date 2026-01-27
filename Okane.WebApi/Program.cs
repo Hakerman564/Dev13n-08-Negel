@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using Okane.Application;
+using Okane.Storage.EntityFramework;
 using Okane.WebApi;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,7 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddOpenApi()
     .AddTransient<ExpensesService>()
-    .AddSingleton<IRepository<Expense>, InMemoryRepository<Expense>>();
+    .AddSingleton<IRepository<Expense>, InMemoryRepository<Expense>>()
+    .AddDbContext<OkaneDbContext>(options => 
+        options.UseNpgsql(
+            builder.Configuration.GetConnectionString("Default"),
+            npgsql => npgsql.MigrationsAssembly(typeof(OkaneDbContext).Assembly.FullName)));
 
 var app = builder.Build();
     
