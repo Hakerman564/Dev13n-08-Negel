@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddOpenApi()
     .AddTransient<ExpensesService>()
+    .AddTransient<CategoriesService>()
     .AddTransient<IExpensesRepository, ExpensesRepository>()
     .AddTransient<ICategoriesRepository, CategoriesRepository>()
     .AddTransient<ExpenseResponseFactory>()
@@ -39,5 +40,15 @@ app.MapPut("/expenses/{id}",
 
 app.MapDelete("/expenses/{id}", 
     (ExpensesService service, int id) => service.Delete(id).ToHttpResult());
+
+app.MapPost("/categories", 
+    (CategoriesService service, CreateCategoryRequest request) => 
+        service.Create(request).ToHttpResult());
+
+app.MapPost("/categories/{id}", 
+    (CategoriesService service, int id) => 
+        service.Retrieve(id).ToHttpResult());
+
+app.MapGet("/categories", (CategoriesService service) => service.All().ToHttpResult());
 
 app.Run();

@@ -6,28 +6,26 @@ namespace Okane.Storage.EntityFramework
     {
         public void Add(Category entity)
         {
-            throw new NotImplementedException();
+            db.Categories.Add(entity);
+            db.SaveChanges();
         }
 
-        public Category? ById(int id)
-        {
-            throw new NotImplementedException();
-        }
+        public Category? ById(int id) =>
+            db.Categories
+                .FirstOrDefault(x => x.Id == id);
 
-        public IEnumerable<Category> All()
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<Category> All() =>
+            db.Categories;
 
         public void Remove(int id)
         {
-            throw new NotImplementedException();
+            var category = db.Categories.First(x => x.Id == id);
+            db.Categories.Remove(category);
+            db.SaveChanges();
         }
 
-        public bool Exists(int id)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Exists(int id) => 
+            db.Categories.Any(x => x.Id == id);
 
         public Category ByName(string name) => 
             db.Categories.First(category => category.Name == name);
