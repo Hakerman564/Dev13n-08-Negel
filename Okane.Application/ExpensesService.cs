@@ -1,7 +1,8 @@
 namespace Okane.Application;
 
 public class ExpensesService(
-    IRepository<Expense> expenses, 
+    IExpensesRepository expenses,
+    ICategoriesRepository categories,
     ExpenseResponseFactory expenseResponseFactory)
 {
     public Result<ExpenseResponse> Create(CreateExpenseRequest request)
@@ -10,7 +11,9 @@ public class ExpensesService(
             return new ErrorResult<ExpenseResponse>(
                 $"{nameof(request.Amount)} must be greater than 1.");
 
-        var expense = Expense(request);
+        var category = categories.ByName(request.CategoryName);
+        
+        var expense = Expense(request, category);
         expenses.Add(expense);
 
         var response = expenseResponseFactory.Create(expense);
@@ -48,7 +51,8 @@ public class ExpensesService(
             return new NotFoundResult<ExpenseResponse>(
                 $"Expense with id {id} was not found.");
 
-        var updated = expenses.Update(id, request);
+        var category =  categories.ByName(request.CategoryName);
+        var updated = expenses.Update(id, request, category);
 
         var response = expenseResponseFactory.Create(updated);
         return new OkResult<ExpenseResponse>(response);
@@ -65,11 +69,11 @@ public class ExpensesService(
         return new OkResult();
     }
     
-    private static Expense Expense(CreateExpenseRequest request) =>
+    private static Expense Expense(CreateExpenseRequest request, Category category) =>
         new()
         {
             Amount = request.Amount,
-            CategoryName = request.CategoryName,
+            Category = category,
             Description = request.Description
         };
 }

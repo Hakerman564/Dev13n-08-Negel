@@ -6,8 +6,15 @@ public class ExpensesServiceTests
 {
     private readonly ExpensesService _service;
 
-    public ExpensesServiceTests() => 
-        _service = new ExpensesService(new InMemoryRepository<Expense>(), new ExpenseResponseFactory());
+    public ExpensesServiceTests()
+    {
+        var categories = new InMemoryCategoriesRepository();
+        categories.Add(new Category { Name = "Food" });
+        categories.Add(new Category { Name = "Drinks" });
+        
+        _service = new ExpensesService(new InMemoryExpensesRepository(), categories,
+            new ExpenseResponseFactory());
+    }
 
     [Fact]
     public void Create_Response()
@@ -75,6 +82,11 @@ public class ExpensesServiceTests
         Assert.Contains(all, e => e.Amount == 20 && e.CategoryName == "Drinks");
     }
 
+    [Fact(Skip = "Not implemented")]
+    public void Update_CategoryNameDoesNotExist()
+    {
+    }
+    
     [Fact]
     public void Update_ExistingExpense()
     {
