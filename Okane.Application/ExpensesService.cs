@@ -55,7 +55,7 @@ public class ExpensesService(
 
         if (category is null)
             return new ErrorResult<ExpenseResponse>(
-                $"{nameof(request.CategoryName)} ${request.CategoryName} does not exist");
+                $"{nameof(request.CategoryName)} {request.CategoryName} does not exist");
         
         var updated = expenses.Update(id, request, category);
 
