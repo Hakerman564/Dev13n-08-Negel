@@ -1,6 +1,7 @@
+using Okane.Application;
 using Okane.Domain;
 
-namespace Okane.Application.Expenses;
+namespace Okane.Storage.InMemory;
 
 public abstract class InMemoryRepository<T> : IRepository<T> where T : IEntity
 {

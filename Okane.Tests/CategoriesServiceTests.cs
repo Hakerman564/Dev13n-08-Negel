@@ -1,6 +1,7 @@
 using Okane.Application;
 using Okane.Application.Categories;
 using Okane.Application.Expenses;
+using Okane.Storage.InMemory;
 
 namespace Okane.Tests;
 

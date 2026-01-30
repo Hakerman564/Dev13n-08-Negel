@@ -1,7 +1,7 @@
-using Okane.Application.Expenses;
+using Okane.Application.Categories;
 using Okane.Domain;
 
-namespace Okane.Application.Categories;
+namespace Okane.Storage.InMemory;
 
 public class InMemoryCategoriesRepository : InMemoryRepository<Category>, ICategoriesRepository
 {

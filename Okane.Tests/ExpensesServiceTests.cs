@@ -2,6 +2,7 @@
 using Okane.Application.Categories;
 using Okane.Application.Expenses;
 using Okane.Domain;
+using Okane.Storage.InMemory;
 
 namespace Okane.Tests;
 
