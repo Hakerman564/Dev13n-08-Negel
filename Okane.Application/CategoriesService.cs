@@ -1,9 +1,13 @@
 namespace Okane.Application;
 
-public class CategoriesService(ICategoriesRepository categories)
+public class CategoriesService(ICategoriesRepository categories, IExpensesRepository expenses)
 {
     public Result<CategoryResponse> Create(CreateCategoryRequest request)
     {
+        if (categories.ByName(request.Name) != null)
+            return new ErrorResult<CategoryResponse>(
+                $"{nameof(Category)} with name {request.Name} already exists.");
+        
         var category = new Category
         {
             Name = request.Name
@@ -32,13 +36,35 @@ public class CategoriesService(ICategoriesRepository categories)
         return new OkResult<IEnumerable<CategoryResponse>>(response);
     }
 
-    public Result Remove(int createdId)
+    public Result Remove(int id)
     {
-        throw new NotImplementedException();
+        var category = categories.ById(id);
+
+        if (category == null)
+            return new NotFoundResult($"{nameof(Category)} with id {id} was not found.");
+
+        var categoryExpenses = expenses.ByCategoryName(category.Name);
+        
+        if (categoryExpenses.Any())
+            return new ErrorResult("Can not delete category with existing expenses");
+        
+        categories.Remove(id);
+        return new OkResult();
     }
 
-    public Result<CategoryResponse> Update(int id, UpdateCategoryRequest reuqest)
+    public Result<CategoryResponse> Update(UpdateCategoryRequest request)
     {
-        throw new NotImplementedException();
+        var withName = categories.ByName(request.Name);
+        if (withName != null)
+            return  new ErrorResult<CategoryResponse>(
+                $"{nameof(Category)} with name {request.Name} already exists.");
+        
+        var existing = categories.ById(request.Id);
+
+        existing.Name = request.Name;
+
+        categories.Update(existing);
+        
+        return  new OkResult<CategoryResponse>(new CategoryResponse(existing.Id, existing.Name));
     }
 }

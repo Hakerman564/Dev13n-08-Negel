@@ -40,4 +40,7 @@ public class ExpensesRepository(OkaneDbContext db) : IExpensesRepository
         db.SaveChanges();
         return existing;
     }
+
+    public IEnumerable<Expense> ByCategoryName(string categoryName) => 
+        db.Expenses.Where(expense => expense.Category.Name == categoryName);
 }

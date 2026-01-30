@@ -10,8 +10,9 @@ public class CategoriesServiceTests
     public CategoriesServiceTests()
     {
         var categoriesRepository = new InMemoryCategoriesRepository();
-        _service = new CategoriesService(categoriesRepository);
-        _expensesService = new ExpensesService(new InMemoryExpensesRepository(), categoriesRepository,
+        var expensesRepository = new InMemoryExpensesRepository();
+        _service = new CategoriesService(categoriesRepository, expensesRepository);
+        _expensesService = new ExpensesService(expensesRepository, categoriesRepository,
             new ExpenseResponseFactory());
     }
     
@@ -31,7 +32,7 @@ public class CategoriesServiceTests
         
         var error = _service.Create(new CreateCategoryRequest("Food")).AssertError();
 
-        Assert.Equal("Category already exists", error);
+        Assert.Equal("Category with name Food already exists.", error);
     }
     
     [Fact]
@@ -57,8 +58,8 @@ public class CategoriesServiceTests
     {
         var created = _service.Create(new("Taxes")).AssertOk();
 
-        var updated = _service.Update(created.Id, 
-            new UpdateCategoryRequest("Education")).AssertOk();
+        var updated = _service
+            .Update(new UpdateCategoryRequest(created.Id, "Education")).AssertOk();
 
         var retrieved = _service.Retrieve(updated.Id).AssertOk();
 
@@ -71,10 +72,10 @@ public class CategoriesServiceTests
         _service.Create(new("Taxes")).AssertOk();
         var created = _service.Create(new("Games")).AssertOk();
 
-        var error = _service.Update(created.Id, 
-            new UpdateCategoryRequest("Taxes")).AssertError();
+        var error = _service.Update( 
+            new UpdateCategoryRequest(created.Id,"Taxes")).AssertError();
         
-        Assert.Equal("Category already exists", error);
+        Assert.Equal("Category with name Taxes already exists.", error);
     }
     
     [Fact]

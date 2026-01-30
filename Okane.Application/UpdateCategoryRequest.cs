@@ -1,3 +1,3 @@
 namespace Okane.Application;
 
-public record UpdateCategoryRequest(string Name);
+public record UpdateCategoryRequest(int Id, string Name);

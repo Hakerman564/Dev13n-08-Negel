@@ -52,6 +52,11 @@ public class ExpensesService(
                 $"Expense with id {id} was not found.");
 
         var category =  categories.ByName(request.CategoryName);
+
+        if (category is null)
+            return new ErrorResult<ExpenseResponse>(
+                $"{nameof(request.CategoryName)} ${request.CategoryName} does not exist");
+        
         var updated = expenses.Update(id, request, category);
 
         var response = expenseResponseFactory.Create(updated);

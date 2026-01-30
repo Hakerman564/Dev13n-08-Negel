@@ -109,7 +109,7 @@ public class ExpensesServiceTests
         var error = _service.Update(created.Id, new UpdateExpenseRequest(10, "Unknown"))
             .AssertError();
         
-        Assert.Equal("Category name 'Unknown' not found.", error);
+        Assert.Equal("CategoryName $Unknown does not exist", error);
     }
     
     [Fact]

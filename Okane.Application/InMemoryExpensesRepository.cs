@@ -11,4 +11,7 @@ public class InMemoryExpensesRepository : InMemoryRepository<Expense>, IExpenses
 
         return existing;
     }
+
+    public IEnumerable<Expense> ByCategoryName(string categoryName) => 
+        Entities.Where(e => e.Category.Name == categoryName);
 }
