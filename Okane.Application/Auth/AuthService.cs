@@ -2,14 +2,17 @@ using Okane.Domain;
 
 namespace Okane.Application.Auth;
 
-public class AuthService(IUsersRepository users)
+public class AuthService(
+    IUsersRepository users, 
+    IPasswordHasher passwordHasher, 
+    ITokenGenerator tokenGenerator)
 {
     public Result<SignUpResponse> SignUp(SignUpRequest request)
     {
         users.Add(new User
         {
             Username = request.Username,
-            Password = request.Password,
+            HashedPassword = passwordHasher.Hash(request.Password),
         });
         
         return new OkResult<SignUpResponse>(new SignUpResponse(request.Username));
@@ -17,14 +20,16 @@ public class AuthService(IUsersRepository users)
 
     public Result<SignInResponse> SignIn(SignInRequest request)
     {
-        var username = users.ByUsername(request.Username);
+        var user = users.ByUsername(request.Username);
         
-        if (username == null)
+        if (user == null)
             return new UnauthorizedResult<SignInResponse>("Invalid username or password.");
         
-        if (username.Password != request.Password)
+        if (!passwordHasher.Verify(request.Password, user.HashedPassword))
             return new UnauthorizedResult<SignInResponse>("Invalid username or password.");
-        
-        return new OkResult<SignInResponse>(new SignInResponse("ASDFGH"));
+
+        var token = tokenGenerator.Generate(user);
+        var response = new SignInResponse(token);
+        return new OkResult<SignInResponse>(response);
     }
 }

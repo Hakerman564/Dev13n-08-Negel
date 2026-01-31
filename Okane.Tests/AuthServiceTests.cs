@@ -5,12 +5,10 @@ namespace Okane.Tests;
 
 public class AuthServiceTests
 {
-    private AuthService _service;
+    private readonly AuthService _service;
 
-    public AuthServiceTests()
-    {
-        _service = new AuthService(new InMemoryUsersRepository());
-    }
+    public AuthServiceTests() => 
+        _service = new AuthService(new InMemoryUsersRepository(), new FakePasswordHasher(), new FakeTokenGenerator());
 
     [Fact]
     public void SignUp()
@@ -30,7 +28,7 @@ public class AuthServiceTests
         var response = _service.SignIn(new("test-user", "1234"))
             .AssertOk();
         
-        Assert.Equal("ASDFGH", response.Token);
+        Assert.Equal("token-test-user", response.Token);
     }
     
     [Fact]
